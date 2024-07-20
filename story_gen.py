@@ -104,28 +104,9 @@ def generate_and_log_tiny_stories(gen_model, params_generator: StoryParamsGenera
 def main():
     GEMINI_API_KEY = open(os.path.expanduser('~/.gemini_api_key'), 'r').read().strip()
     genai.configure(api_key=GEMINI_API_KEY)
-    safety_settings = [
-    {
-        "category": "HARM_CATEGORY_DANGEROUS",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_HARASSMENT",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_HATE_SPEECH",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-        "threshold": "BLOCK_NONE",
-    },
-    ]
+    safety_settings = [{'category': c, 'threshold': 'BLOCK_NONE'} for c in
+                    ['HARM_CATEGORY_DANGEROUS', 'HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH',
+                     'HARM_CATEGORY_SEXUALLY_EXPLICIT', 'HARM_CATEGORY_DANGEROUS_CONTENT']]
     flash = genai.GenerativeModel('gemini-1.5-flash', safety_settings=safety_settings)
 
     story_params_generator = pickle.load(open('story_params_generator.pkl', 'rb'))
